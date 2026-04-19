@@ -1,0 +1,1 @@
+## Franky - Python based GUI tool for displaying json, csv and parquet files into readable format
