@@ -1,3 +1,76 @@
+# ---- Virtual Environments
 .venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Catch uncommon names (best-effort, not perfect)
+*env*/
+*venv*/
+
+# Virtualenv metadata
+pyvenv.cfg
+
+# ---- Python cache / compiled files
 __pycache__/
+*.py[cod]
+*$py.class
+
+# ---- Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# ---- Logs & runtime files
+*.log
+*.out
+*.err
+*.pid
+
+# ---- Testing / coverage
+.coverage
+.coverage.*
+.cache/
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# ---- Jupyter Notebook
+.ipynb_checkpoints
+
+# ---- IDE / Editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# ---- OS-specific files
+.DS_Store
+Thumbs.db
+
+# ---- Environment variables
+.env
+.env.*
+*.local
+
+# ---- Misc
+*.sqlite3
+*.db
 
