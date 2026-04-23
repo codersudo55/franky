@@ -2,9 +2,9 @@
 import sys
 import os
 from PySide6.QtWidgets import (
-    QApplication, QWidget, QVBoxLayout,
-    QLineEdit, QPushButton, QMessageBox,
-    QLabel, QHBoxLayout, QTableWidget, QTableWidgetItem
+    QApplication, QWidget, QVBoxLayout, QHBoxLayout,
+    QLabel, QLineEdit, QPushButton, QMessageBox, 
+    QFileDialog, QTableWidget, QTableWidgetItem
 )
 from PySide6.QtGui import QIcon, QPixmap
 from PySide6.QtCore import Qt
@@ -20,7 +20,7 @@ class FrankyApp(QWidget):
 
         main_layout = QVBoxLayout()
 
-        # header layout (logo and title)
+        # ========== header layout (logo and title) ==========
         header_layout = QHBoxLayout()
 
         logo_label = QLabel()
@@ -34,25 +34,45 @@ class FrankyApp(QWidget):
         header_layout.addWidget(title_label)
         header_layout.addStretch()
 
-        # input + button + output
+        # ========== input section ==========
         self.input_box = QLineEdit()
         self.input_box.setPlaceholderText("Enter file path...")
 
-        self.button = QPushButton("Open")
+        self.browse_button = QPushButton("Browse")
+        self.open_button = QPushButton("Open")
 
+        input_layout = QHBoxLayout()
+        input_layout.addWidget(self.input_box)
+        input_layout.addWidget(self.browse_button)
+        input_layout.addWidget(self.open_button)
+
+        # ========== table component ==========
         self.table = QTableWidget()
 
-        # adding everything to main layout
+        # ========== main layout ==========
         main_layout.addLayout(header_layout)
-        main_layout.addWidget(self.input_box)
-        main_layout.addWidget(self.button)
+        main_layout.addLayout(input_layout)
         main_layout.addWidget(self.table)
 
         self.setLayout(main_layout)
 
-        # connect button
-        self.button.clicked.connect(self.load_file)
+        # ========== connect buttons ==========
+        self.browse_button.clicked.connect(self.browse_file)
+        self.open_button.clicked.connect(self.load_file)
+    
+    # ========== Browse File (File Dialog) ==========
+    def browse_file(self):
+        file_path, _ = QFileDialog.getOpenFileName(
+            self,
+            "Select Data File",
+            "",
+            "Data Files (*.csv *.parquet *.json);;All Files (*)"
+        )
 
+        if file_path:
+            self.input_box.setText(file_path)
+
+    # ========== Load File ==========
     def load_file(self):
         path = self.input_box.text()
         try:
@@ -60,7 +80,8 @@ class FrankyApp(QWidget):
             self.display_dataframe(df.head())
         except Exception as e:
             QMessageBox.critical(self, "Error", str(e))
-
+    
+    # ========== Display Table ==========
     def display_dataframe(self,df):
         self.table.clear()
 
@@ -76,7 +97,8 @@ class FrankyApp(QWidget):
         
         self.table.resizeColumnsToContents() # auto-adjust column widths (small UX upgrade)
 
-app = QApplication(sys.argv)
+# ========== RUN APPLICATION ==========
+franky_app = QApplication(sys.argv)
 window = FrankyApp()
 window.show()
-sys.exit(app.exec())
+sys.exit(franky_app.exec())
