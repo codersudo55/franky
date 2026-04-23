@@ -3,8 +3,8 @@ import sys
 import os
 from PySide6.QtWidgets import (
     QApplication, QWidget, QVBoxLayout,
-    QLineEdit, QPushButton, QTextEdit, QMessageBox,
-    QLabel,QHBoxLayout
+    QLineEdit, QPushButton, QMessageBox,
+    QLabel, QHBoxLayout, QTableWidget, QTableWidgetItem
 )
 from PySide6.QtGui import QIcon, QPixmap
 from PySide6.QtCore import Qt
@@ -40,14 +40,13 @@ class FrankyApp(QWidget):
 
         self.button = QPushButton("Open")
 
-        self.output = QTextEdit()
-        self.output.setReadOnly(True)
+        self.table = QTableWidget()
 
         # adding everything to main layout
         main_layout.addLayout(header_layout)
         main_layout.addWidget(self.input_box)
         main_layout.addWidget(self.button)
-        main_layout.addWidget(self.output)
+        main_layout.addWidget(self.table)
 
         self.setLayout(main_layout)
 
@@ -58,9 +57,24 @@ class FrankyApp(QWidget):
         path = self.input_box.text()
         try:
             df = load_file(path)
-            self.output.setText(df.head().to_string())
+            self.display_dataframe(df.head())
         except Exception as e:
             QMessageBox.critical(self, "Error", str(e))
+
+    def display_dataframe(self,df):
+        self.table.clear()
+
+        self.table.setRowCount(df.shape[0])
+        self.table.setColumnCount(df.shape[1])
+
+        self.table.setHorizontalHeaderLabels(df.columns)
+
+        for row in range(df.shape[0]):
+            for col in range(df.shape[1]):
+                value = str(df.iat[row,col])
+                self.table.setItem(row, col, QTableWidgetItem(value))
+        
+        self.table.resizeColumnsToContents() # auto-adjust column widths (small UX upgrade)
 
 app = QApplication(sys.argv)
 window = FrankyApp()
